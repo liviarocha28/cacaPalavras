@@ -1,0 +1,389 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f4f0e6">
+  <title>Palavra de Hoje — Clube das Letras</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --paper: #f4f0e6;
+      --ink: #202642;
+      --muted: #77788a;
+      --purple: #6151cc;
+      --purple-dark: #4435a6;
+      --lime: #d8f06b;
+      --coral: #ff795f;
+      --tile: #fffdf7;
+      --line: #ded9cb;
+      --good: #57a98b;
+      --near: #eab84e;
+      --miss: #77798b;
+      font-family: ui-rounded, "Arial Rounded MT Bold", system-ui, -apple-system, "Segoe UI", sans-serif;
+      font-synthesis: none;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      min-width: 320px;
+      background:
+        radial-gradient(circle at 91% 9%, rgba(255, 121, 95, .13) 0 120px, transparent 121px),
+        var(--paper);
+      color: var(--ink);
+    }
+
+    .page {
+      width: min(1120px, calc(100% - 48px));
+      margin: 0 auto;
+      padding: 26px 0 34px;
+    }
+
+    .topbar, .brand, .top-actions, .hero, .section-heading, .key-row, .status-line {
+      display: flex;
+      align-items: center;
+    }
+
+    .topbar {
+      justify-content: space-between;
+      padding-bottom: 18px;
+      border-bottom: 1px solid var(--line);
+    }
+
+    .brand { gap: 10px; text-decoration: none; color: inherit; }
+    .brand-mark {
+      display: grid;
+      place-items: center;
+      width: 37px;
+      height: 37px;
+      border-radius: 12px 12px 12px 4px;
+      background: var(--purple);
+      color: white;
+      font-size: 20px;
+      font-weight: 900;
+      transform: rotate(-5deg);
+    }
+    .brand-name { font-size: 14px; font-weight: 850; letter-spacing: .04em; }
+    .brand-name span { display: block; margin-top: 2px; color: var(--muted); font-size: 10px; font-weight: 700; letter-spacing: .14em; text-transform: uppercase; }
+
+    .top-actions { gap: 9px; }
+    .icon-button {
+      display: grid;
+      place-items: center;
+      width: 39px;
+      height: 39px;
+      border: 1px solid var(--line);
+      border-radius: 50%;
+      background: rgba(255,255,255,.55);
+      color: var(--ink);
+      font-size: 17px;
+    }
+
+    .hero {
+      justify-content: space-between;
+      gap: 24px;
+      padding: 35px 0 27px;
+    }
+    .eyebrow {
+      margin: 0 0 7px;
+      color: var(--purple);
+      font-size: 11px;
+      font-weight: 900;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+    h1 {
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(38px, 6vw, 65px);
+      font-weight: 900;
+      letter-spacing: -.055em;
+      line-height: .97;
+    }
+    h1 span { color: var(--coral); font-style: italic; }
+    .hero-copy {
+      max-width: 390px;
+      margin: 12px 0 0;
+      color: #5e6075;
+      font-size: 14px;
+      line-height: 1.55;
+    }
+    .day-stamp {
+      flex: 0 0 auto;
+      position: relative;
+      display: grid;
+      place-items: center;
+      width: 106px;
+      height: 106px;
+      border-radius: 50%;
+      background: var(--lime);
+      text-align: center;
+      transform: rotate(8deg);
+    }
+    .day-stamp::after {
+      position: absolute;
+      inset: 7px;
+      border: 1px dashed rgba(32,38,66,.36);
+      border-radius: 50%;
+      content: "";
+    }
+    .day-stamp strong { font-size: 29px; line-height: .9; }
+    .day-stamp span { display: block; margin-top: 6px; font-size: 9px; font-weight: 900; letter-spacing: .1em; text-transform: uppercase; }
+
+    .game-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.35fr) minmax(260px, .75fr);
+      gap: 20px;
+      align-items: stretch;
+    }
+    .game-card {
+      padding: 23px clamp(18px, 4vw, 38px) 25px;
+      border: 1px solid #ded9cb;
+      border-radius: 25px;
+      background: rgba(255,253,247,.82);
+      box-shadow: 0 8px 0 rgba(50,45,75,.04);
+    }
+    .section-heading { justify-content: space-between; gap: 12px; margin-bottom: 18px; }
+    .section-heading h2 { margin: 0; font-size: 15px; font-weight: 900; }
+    .guess-count {
+      padding: 7px 10px;
+      border-radius: 99px;
+      background: #eeebff;
+      color: var(--purple-dark);
+      font-size: 10px;
+      font-weight: 900;
+      letter-spacing: .05em;
+      text-transform: uppercase;
+    }
+
+    .board {
+      width: min(100%, 330px);
+      margin: 0 auto 21px;
+      display: grid;
+      grid-template-columns: repeat(5, 1fr);
+      gap: 7px;
+    }
+    .tile {
+      display: grid;
+      aspect-ratio: 1;
+      place-items: center;
+      border: 2px solid #d9d5ca;
+      border-radius: 10px;
+      background: var(--tile);
+      color: var(--ink);
+      font-size: clamp(19px, 4vw, 25px);
+      font-weight: 900;
+      line-height: 1;
+    }
+    .tile.good, .tile.near, .tile.miss { border-color: transparent; color: white; }
+    .tile.good { background: var(--good); }
+    .tile.near { background: var(--near); color: #342b16; }
+    .tile.miss { background: var(--miss); }
+    .tile.active { border-color: var(--purple); box-shadow: 0 0 0 3px rgba(97,81,204,.12); }
+
+    .keyboard { display: grid; gap: 6px; width: min(100%, 440px); margin: 0 auto; }
+    .key-row { justify-content: center; gap: 5px; }
+    .key {
+      display: grid;
+      flex: 1 1 0;
+      min-width: 0;
+      height: 39px;
+      place-items: center;
+      border: 0;
+      border-radius: 7px;
+      background: #e8e4d9;
+      color: #34364d;
+      font: inherit;
+      font-size: 12px;
+      font-weight: 850;
+    }
+    .key.special { flex: 1.55 1 0; background: #d9d4c7; font-size: 10px; }
+    .key.used { background: #cbc7bd; color: #fffdf7; }
+    .key.hint { background: #b3d9c9; }
+    .key.warm { background: #f5cf72; }
+
+    .side-column { display: flex; flex-direction: column; gap: 15px; }
+    .clue-card {
+      position: relative;
+      overflow: hidden;
+      min-height: 195px;
+      padding: 22px;
+      border-radius: 25px;
+      background: var(--purple);
+      color: white;
+    }
+    .clue-card::after {
+      position: absolute;
+      right: -24px;
+      bottom: -45px;
+      width: 160px;
+      height: 160px;
+      border: 1px solid rgba(255,255,255,.2);
+      border-radius: 50%;
+      box-shadow: 0 0 0 17px rgba(255,255,255,.05), 0 0 0 35px rgba(255,255,255,.04);
+      content: "";
+    }
+    .clue-label { margin: 0 0 15px; color: #d9d3ff; font-size: 10px; font-weight: 900; letter-spacing: .15em; text-transform: uppercase; }
+    .clue-card blockquote {
+      position: relative;
+      z-index: 1;
+      max-width: 260px;
+      margin: 0;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(21px, 2.5vw, 28px);
+      font-weight: 700;
+      letter-spacing: -.035em;
+      line-height: 1.18;
+    }
+    .clue-card blockquote em { color: var(--lime); }
+    .clue-note { position: relative; z-index: 1; margin: 15px 0 0; color: #e3e0ff; font-size: 11px; }
+
+    .progress-card {
+      padding: 18px 20px;
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      background: #fffdf7;
+    }
+    .progress-card h2 { margin: 0 0 13px; font-size: 12px; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; }
+    .status-line { gap: 12px; }
+    .avatar {
+      display: grid;
+      flex: 0 0 42px;
+      width: 42px;
+      height: 42px;
+      place-items: center;
+      border-radius: 15px;
+      background: #ffdfd5;
+      font-size: 23px;
+    }
+    .status-copy { flex: 1; }
+    .status-copy strong { display: block; font-size: 12px; }
+    .status-copy span { display: block; margin-top: 4px; color: var(--muted); font-size: 10px; }
+    .streak { color: #bd6048; font-size: 12px; font-weight: 900; white-space: nowrap; }
+    .divider { height: 1px; margin: 14px 0; background: var(--line); }
+    .legend { display: flex; flex-wrap: wrap; gap: 12px; color: #646578; font-size: 10px; }
+    .legend span { display: inline-flex; align-items: center; gap: 5px; }
+    .swatch { width: 10px; height: 10px; border-radius: 3px; }
+    .swatch.good { background: var(--good); }
+    .swatch.near { background: var(--near); }
+    .swatch.miss { background: var(--miss); }
+
+    .bottom-note {
+      margin: 16px 0 0;
+      color: #858597;
+      font-size: 10px;
+      line-height: 1.5;
+      text-align: center;
+    }
+
+    @media (max-width: 760px) {
+      .page { width: min(620px, calc(100% - 30px)); padding-top: 17px; }
+      .hero { padding: 27px 0 22px; }
+      .game-layout { grid-template-columns: 1fr; gap: 14px; }
+      .side-column { display: grid; grid-template-columns: 1fr 1fr; align-items: stretch; }
+      .clue-card { min-height: 185px; }
+    }
+    @media (max-width: 490px) {
+      .page { width: calc(100% - 24px); }
+      .hero { align-items: flex-start; gap: 10px; }
+      .day-stamp { width: 75px; height: 75px; margin-top: 8px; }
+      .day-stamp strong { font-size: 23px; }
+      .day-stamp span { font-size: 7px; }
+      .hero-copy { max-width: 260px; font-size: 12px; }
+      .game-card { padding: 18px 14px 19px; border-radius: 21px; }
+      .board { gap: 5px; width: min(100%, 305px); }
+      .tile { border-radius: 8px; }
+      .key { height: 35px; font-size: 10px; }
+      .key.special { font-size: 8px; }
+      .side-column { grid-template-columns: 1fr; }
+      .clue-card { min-height: 165px; }
+      .clue-card blockquote { max-width: 300px; }
+    }
+    @media (prefers-reduced-motion: no-preference) {
+      .brand-mark { transition: transform .2s ease; }
+      .brand:hover .brand-mark { transform: rotate(4deg) scale(1.06); }
+    }
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="Clube das Letras, início">
+        <span class="brand-mark" aria-hidden="true">C</span>
+        <span class="brand-name">CLUBE DAS LETRAS<span>um jogo por dia</span></span>
+      </a>
+      <nav class="top-actions" aria-label="Opções do jogo">
+        <button class="icon-button" type="button" aria-label="Como jogar">?</button>
+        <button class="icon-button" type="button" aria-label="Compartilhar resultado">↗</button>
+      </nav>
+    </header>
+
+    <section class="hero" aria-labelledby="page-title">
+      <div>
+        <p class="eyebrow">Seu ritual de cinco minutinhos</p>
+        <h1 id="page-title">Palavra <span>de Hoje</span></h1>
+        <p class="hero-copy">Uma palavra escondida, seis tentativas e uma pausa gostosa no meio do dia. Bora descobrir?</p>
+      </div>
+      <div class="day-stamp" aria-label="Desafio número 248">
+        <div><strong>248</strong><span>desafio</span></div>
+      </div>
+    </section>
+
+    <div class="game-layout">
+      <section class="game-card" aria-labelledby="board-title">
+        <div class="section-heading">
+          <h2 id="board-title">A palavra misteriosa</h2>
+          <span class="guess-count">Tentativa 4 de 6</span>
+        </div>
+
+        <div class="board" role="img" aria-label="Tabuleiro ilustrativo de seis tentativas. A palavra CASA: C está na posição certa, A aparece em outra posição, e S não está na palavra. A tentativa atual contém as letras P e R.">
+          <span class="tile good">C</span><span class="tile near">A</span><span class="tile miss">S</span><span class="tile miss">A</span><span class="tile miss">R</span>
+          <span class="tile miss">P</span><span class="tile good">A</span><span class="tile near">T</span><span class="tile miss">O</span><span class="tile miss">S</span>
+          <span class="tile miss">L</span><span class="tile near">A</span><span class="tile miss">P</span><span class="tile good">I</span><span class="tile miss">S</span>
+          <span class="tile active">P</span><span class="tile active">R</span><span class="tile"></span><span class="tile"></span><span class="tile"></span>
+          <span class="tile"></span><span class="tile"></span><span class="tile"></span><span class="tile"></span><span class="tile"></span>
+          <span class="tile"></span><span class="tile"></span><span class="tile"></span><span class="tile"></span><span class="tile"></span>
+        </div>
+
+        <div class="keyboard" role="group" aria-label="Teclado ilustrativo">
+          <div class="key-row">
+            <span class="key used">Q</span><span class="key used">W</span><span class="key used">E</span><span class="key">R</span><span class="key used">T</span><span class="key used">Y</span><span class="key used">U</span><span class="key hint">I</span><span class="key used">O</span><span class="key used">P</span>
+          </div>
+          <div class="key-row">
+            <span class="key used">A</span><span class="key used">S</span><span class="key used">D</span><span class="key used">F</span><span class="key used">G</span><span class="key used">H</span><span class="key used">J</span><span class="key used">K</span><span class="key used">L</span>
+          </div>
+          <div class="key-row">
+            <span class="key special">ENTER</span><span class="key used">Z</span><span class="key used">X</span><span class="key used">C</span><span class="key used">V</span><span class="key used">B</span><span class="key used">N</span><span class="key used">M</span><span class="key special" aria-label="Apagar">⌫</span>
+          </div>
+        </div>
+        <p class="bottom-note">As cores dão pistas: verde no lugar, amarelo em outro cantinho.</p>
+      </section>
+
+      <aside class="side-column" aria-label="Dicas e progresso">
+        <section class="clue-card" aria-labelledby="clue-title">
+          <p class="clue-label" id="clue-title">Pista de hoje · sem spoiler</p>
+          <blockquote>“Tem casa, tem rua… e também pode ser <em>de papel</em>.”</blockquote>
+          <p class="clue-note">Uma dica amiga, caso bata aquele branco.</p>
+        </section>
+
+        <section class="progress-card" aria-labelledby="progress-title">
+          <h2 id="progress-title">Seu cantinho</h2>
+          <div class="status-line">
+            <span class="avatar" aria-hidden="true">🌞</span>
+            <div class="status-copy"><strong>Que bom te ver por aqui!</strong><span>Você está pegando o ritmo.</span></div>
+            <span class="streak" aria-label="Sequência de 3 dias">🔥 3</span>
+          </div>
+          <div class="divider"></div>
+          <div class="legend" aria-label="Legenda das cores">
+            <span><i class="swatch good" aria-hidden="true"></i>no lugar</span>
+            <span><i class="swatch near" aria-hidden="true"></i>em outra posição</span>
+            <span><i class="swatch miss" aria-hidden="true"></i>não aparece</span>
+          </div>
+        </section>
+      </aside>
+    </div>
+  </main>
+</body>
+</html>

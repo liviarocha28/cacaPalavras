@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#fbf8f0">
+  <title>Palavra do Dia — Caça-Palavras</title>
+  <style>
+    :root {
+      color-scheme: light;
+      --ink: #252d3a;
+      --muted: #707987;
+      --paper: #fbf8f0;
+      --white: #fffefa;
+      --line: #e9e3d7;
+      --green: #4f9d76;
+      --green-soft: #e7f3e9;
+      --yellow: #e6ad3f;
+      --yellow-soft: #fff3d5;
+      --gray: #818995;
+      --coral: #f18a72;
+      --lavender: #ece9ff;
+      --shadow: 0 18px 55px rgba(54, 54, 47, .08);
+      font-family: "Trebuchet MS", "Segoe UI", sans-serif;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      min-width: 320px;
+      min-height: 100vh;
+      margin: 0;
+      color: var(--ink);
+      background:
+        radial-gradient(circle at 8% 12%, rgba(241, 138, 114, .13), transparent 20rem),
+        radial-gradient(circle at 92% 30%, rgba(143, 195, 164, .15), transparent 22rem),
+        var(--paper);
+    }
+
+    button { font: inherit; }
+
+    .page {
+      width: min(1120px, 100%);
+      margin: 0 auto;
+      padding: 22px 28px 36px;
+    }
+
+    .topbar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 58px;
+      padding-bottom: 17px;
+      border-bottom: 1px solid rgba(90, 84, 67, .12);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 11px;
+      color: var(--ink);
+      font-size: 1.12rem;
+      font-weight: 800;
+      letter-spacing: -.04em;
+      text-decoration: none;
+    }
+
+    .brand-mark {
+      display: grid;
+      width: 38px;
+      height: 38px;
+      place-items: center;
+      border-radius: 13px;
+      background: var(--green-soft);
+      color: #357e59;
+      font-size: 1.18rem;
+      transform: rotate(-5deg);
+    }
+
+    .top-actions { display: flex; align-items: center; gap: 10px; }
+
+    .icon-button {
+      display: inline-grid;
+      width: 40px;
+      height: 40px;
+      place-items: center;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      color: #5d6672;
+      background: rgba(255, 254, 250, .8);
+      font-size: 1.1rem;
+    }
+
+    .main-grid {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) 290px;
+      gap: 42px;
+      align-items: start;
+      max-width: 890px;
+      margin: 36px auto 0;
+    }
+
+    .game { min-width: 0; }
+
+    .eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      margin: 0 0 8px;
+      color: #567461;
+      font-size: .72rem;
+      font-weight: 800;
+      letter-spacing: .12em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: clamp(2rem, 4vw, 2.7rem);
+      letter-spacing: -.065em;
+      line-height: 1.05;
+    }
+
+    .intro {
+      margin: 11px 0 0;
+      color: var(--muted);
+      font-size: .95rem;
+      line-height: 1.5;
+    }
+
+    .board-wrap {
+      display: flex;
+      justify-content: center;
+      margin: 24px 0 16px;
+    }
+
+    .board {
+      display: grid;
+      grid-template-columns: repeat(5, 52px);
+      gap: 7px;
+      margin: 0;
+      padding: 0;
+      border: 0;
+    }
+
+    .tile {
+      display: grid;
+      width: 52px;
+      aspect-ratio: 1;
+      place-items: center;
+      border: 2px solid #e3dfd6;
+      border-radius: 11px;
+      color: var(--ink);
+      background: var(--white);
+      font-size: 1.36rem;
+      font-weight: 800;
+      line-height: 1;
+      text-transform: uppercase;
+    }
+
+    .tile.filled { border-color: #bdc6be; }
+
+    .tile.correct {
+      border-color: var(--green);
+      color: white;
+      background: var(--green);
+    }
+
+    .tile.present {
+      border-color: var(--yellow);
+      color: white;
+      background: var(--yellow);
+    }
+
+    .tile.absent {
+      border-color: var(--gray);
+      color: white;
+      background: var(--gray);
+    }
+
+    .board-caption {
+      position: absolute;
+      width: 1px;
+      height: 1px;
+      overflow: hidden;
+      clip: rect(0, 0, 0, 0);
+      white-space: nowrap;
+      clip-path: inset(50%);
+    }
+
+    .feedback {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      min-height: 25px;
+      margin-bottom: 15px;
+      color: #626c76;
+      font-size: .83rem;
+      text-align: center;
+    }
+
+    .feedback strong { color: #396f52; }
+
+    .keyboard {
+      display: grid;
+      gap: 7px;
+      width: min(100%, 410px);
+      margin: 0 auto;
+    }
+
+    .key-row {
+      display: flex;
+      justify-content: center;
+      gap: 5px;
+    }
+
+    .key {
+      display: grid;
+      min-width: 0;
+      height: 45px;
+      flex: 1 1 0;
+      place-items: center;
+      padding: 0 4px;
+      border: 0;
+      border-radius: 9px;
+      color: #3c4651;
+      background: #e9e6dd;
+      font-size: .83rem;
+      font-weight: 800;
+    }
+
+    .key.wide { flex: 1.55 1 0; font-size: .7rem; }
+    .key.used-green { color: white; background: var(--green); }
+    .key.used-yellow { color: white; background: var(--yellow); }
+    .key.used-gray { color: white; background: var(--gray); }
+
+    .submit-note {
+      margin: 12px 0 0;
+      color: #8b9095;
+      font-size: .72rem;
+      text-align: center;
+    }
+
+    .side-column {
+      display: grid;
+      gap: 14px;
+      padding-top: 3px;
+    }
+
+    .card {
+      border: 1px solid rgba(221, 215, 201, .85);
+      border-radius: 20px;
+      background: rgba(255, 254, 250, .82);
+      box-shadow: var(--shadow);
+    }
+
+    .daily-card { padding: 19px 19px 17px; }
+
+    .card-kicker {
+      margin: 0 0 8px;
+      color: #8a8173;
+      font-size: .68rem;
+      font-weight: 800;
+      letter-spacing: .11em;
+      text-transform: uppercase;
+    }
+
+    .daily-heading {
+      display: flex;
+      align-items: start;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .daily-heading h2 {
+      margin: 0;
+      font-size: 1.07rem;
+      letter-spacing: -.03em;
+    }
+
+    .date-chip {
+      flex: none;
+      padding: 6px 8px;
+      border-radius: 8px;
+      color: #54705c;
+      background: var(--green-soft);
+      font-size: .66rem;
+      font-weight: 800;
+    }
+
+    .streak-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 17px 0 14px;
+      padding: 12px;
+      border-radius: 13px;
+      background: #fff5df;
+    }
+
+    .flame {
+      display: grid;
+      width: 34px;
+      height: 34px;
+      place-items: center;
+      border-radius: 11px;
+      background: white;
+      font-size: 1.15rem;
+    }
+
+    .streak-number { font-size: 1.18rem; font-weight: 900; line-height: 1; }
+    .streak-label { margin-top: 4px; color: #89785e; font-size: .69rem; }
+
+    .progress-title {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 7px;
+      color: #717986;
+      font-size: .72rem;
+    }
+
+    .progress-title strong { color: #39434e; }
+
+    .progress-track {
+      height: 8px;
+      overflow: hidden;
+      border-radius: 99px;
+      background: #eeece5;
+    }
+
+    .progress-fill {
+      width: 62%;
+      height: 100%;
+      border-radius: inherit;
+      background: linear-gradient(90deg, #66ad82, #97c98b);
+    }
+
+    .helper-card {
+      padding: 17px 18px;
+      background: var(--lavender);
+      box-shadow: none;
+    }
+
+    .helper-title {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin: 0 0 7px;
+      font-size: .87rem;
+      font-weight: 800;
+    }
+
+    .helper-icon {
+      display: grid;
+      width: 25px;
+      height: 25px;
+      place-items: center;
+      border-radius: 8px;
+      background: white;
+      font-size: .8rem;
+    }
+
+    .helper-card p {
+      margin: 0;
+      color: #68647c;
+      font-size: .77rem;
+      line-height: 1.5;
+    }
+
+    .legend-card { padding: 16px 18px; box-shadow: none; }
+
+    .legend-card h2 {
+      margin: 0 0 11px;
+      font-size: .79rem;
+      font-weight: 800;
+    }
+
+    .legend-list {
+      display: grid;
+      gap: 9px;
+      margin: 0;
+      padding: 0;
+      list-style: none;
+      color: #69727d;
+      font-size: .73rem;
+    }
+
+    .legend-item { display: flex; align-items: center; gap: 8px; }
+
+    .swatch {
+      width: 15px;
+      height: 15px;
+      flex: none;
+      border-radius: 4px;
+    }
+
+    .swatch.green { background: var(--green); }
+    .swatch.yellow { background: var(--yellow); }
+    .swatch.gray { background: var(--gray); }
+
+    .footer {
+      max-width: 890px;
+      margin: 23px auto 0;
+      padding-top: 14px;
+      border-top: 1px solid rgba(90, 84, 67, .11);
+      color: #93958e;
+      font-size: .69rem;
+      text-align: center;
+    }
+
+    @media (max-width: 760px) {
+      .page { padding: 14px 18px 25px; }
+      .main-grid {
+        grid-template-columns: minmax(0, 1fr);
+        gap: 24px;
+        max-width: 480px;
+        margin-top: 25px;
+      }
+      .side-column {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        align-items: stretch;
+      }
+      .daily-card { grid-column: 1 / -1; }
+      .footer { max-width: 480px; }
+    }
+
+    @media (max-width: 420px) {
+      .page { padding-inline: 13px; }
+      .brand { font-size: 1rem; }
+      .top-actions { gap: 6px; }
+      .icon-button { width: 36px; height: 36px; }
+      .board { grid-template-columns: repeat(5, min(15vw, 49px)); gap: 6px; }
+      .tile { width: min(15vw, 49px); border-radius: 9px; font-size: 1.2rem; }
+      .key-row { gap: 3px; }
+      .key { height: 41px; border-radius: 7px; font-size: .75rem; }
+      .key.wide { font-size: .62rem; }
+      .side-column { grid-template-columns: 1fr; }
+      .daily-card { grid-column: auto; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="topbar">
+      <a class="brand" href="#" aria-label="Caça-Palavras, página inicial">
+        <span class="brand-mark" aria-hidden="true">✳</span>
+        <span>caça-palavras</span>
+      </a>
+      <nav class="top-actions" aria-label="Ajuda e opções">
+        <button class="icon-button" type="button" aria-label="Como jogar">?</button>
+        <button class="icon-button" type="button" aria-label="Estatísticas">▥</button>
+        <button class="icon-button" type="button" aria-label="Configurações">⚙</button>
+      </nav>
+    </header>
+
+    <main class="main-grid">
+      <section class="game" aria-labelledby="game-title">
+        <p class="eyebrow"><span aria-hidden="true">☀</span> desafio de hoje</p>
+        <h1 id="game-title">Uma palavra, seis tentativas.</h1>
+        <p class="intro">Descubra a palavra secreta de 5 letras. As cores mostram o caminho!</p>
+
+        <div class="board-wrap">
+          <div class="board" role="img" aria-label="Tabuleiro ilustrativo com duas tentativas. Na primeira, P e A estão nas posições corretas; R está na palavra, mas em outra posição. A segunda tentativa ainda não recebeu resultado.">
+            <span class="tile correct" aria-hidden="true">P</span>
+            <span class="tile present" aria-hidden="true">R</span>
+            <span class="tile absent" aria-hidden="true">A</span>
+            <span class="tile correct" aria-hidden="true">T</span>
+            <span class="tile absent" aria-hidden="true">O</span>
+
+            <span class="tile correct" aria-hidden="true">P</span>
+            <span class="tile correct" aria-hidden="true">A</span>
+            <span class="tile filled" aria-hidden="true">I</span>
+            <span class="tile filled" aria-hidden="true">X</span>
+            <span class="tile filled" aria-hidden="true">E</span>
+
+            <span class="tile" aria-hidden="true"></span>
+            <span class="tile" aria-hidden="true"></span>
+            <span class="tile" aria-hidden="true"></span>
+            <span class="tile" aria-hidden="true"></span>
+            <span class="tile" aria-hidden="true"></span>
+
+            <span class="tile" aria-hidden="true"></span>
+            <span class="tile" aria-hidden="true"></span>
+            <span class="tile" aria-hidden="true"></span>
+            <span class="tile" aria-hidden="true"></span>
+            <span class="tile" aria-hidden="true"></span>
+
+            <span class="tile" aria-hidden="true"></span>
+            <span class="tile" aria-hidden="true"></span>
+            <span class="tile" aria-hidden="true"></span>
+            <span class="tile" aria-hidden="true"></span>
+            <span class="tile" aria-hidden="true"></span>
+
+            <span class="tile" aria-hidden="true"></span>
+            <span class="tile" aria-hidden="true"></span>
+            <span class="tile" aria-hidden="true"></span>
+            <span class="tile" aria-hidden="true"></span>
+            <span class="tile" aria-hidden="true"></span>
+          </div>
+          <p class="board-caption">Exemplo visual de um tabuleiro com seis linhas e cinco letras por linha.</p>
+        </div>
+
+        <p class="feedback" role="status"><span aria-hidden="true">✦</span> <span><strong>Boa pista!</strong> P está no lugar certo.</span></p>
+
+        <div class="keyboard" aria-label="Teclado ilustrativo">
+          <div class="key-row" aria-hidden="true">
+            <span class="key">Q</span><span class="key">W</span><span class="key">E</span><span class="key">R</span><span class="key">T</span><span class="key">Y</span><span class="key">U</span><span class="key">I</span><span class="key">O</span><span class="key">P</span>
+          </div>
+          <div class="key-row" aria-hidden="true">
+            <span class="key">A</span><span class="key">S</span><span class="key">D</span><span class="key">F</span><span class="key">G</span><span class="key">H</span><span class="key">J</span><span class="key">K</span><span class="key">L</span>
+          </div>
+          <div class="key-row" aria-hidden="true">
+            <span class="key wide">ENTER</span><span class="key">Z</span><span class="key">X</span><span class="key">C</span><span class="key">V</span><span class="key">B</span><span class="key">N</span><span class="key">M</span><span class="key wide">⌫</span>
+          </div>
+        </div>
+        <p class="submit-note">Use o teclado para escrever e pressione ENTER para confirmar.</p>
+      </section>
+
+      <aside class="side-column" aria-label="Resumo do desafio">
+        <section class="card daily-card" aria-labelledby="daily-title">
+          <p class="card-kicker">seu resumo</p>
+          <div class="daily-heading">
+            <h2 id="daily-title">Desafio diário</h2>
+            <span class="date-chip">14 OUT</span>
+          </div>
+          <div class="streak-row">
+            <span class="flame" aria-hidden="true">🔥</span>
+            <div>
+              <div class="streak-number">4 dias</div>
+              <div class="streak-label">de sequência — continue!</div>
+            </div>
+          </div>
+          <div class="progress-title"><span>Tentativas usadas</span><strong>2 de 6</strong></div>
+          <div class="progress-track" role="progressbar" aria-label="Tentativas usadas" aria-valuemin="0" aria-valuemax="6" aria-valuenow="2">
+            <div class="progress-fill"></div>
+          </div>
+        </section>
+
+        <section class="card helper-card" aria-labelledby="hint-title">
+          <h2 class="helper-title" id="hint-title"><span class="helper-icon" aria-hidden="true">💡</span> Como funciona</h2>
+          <p>Uma palavra nova por dia. Cada tentativa revela pistas — sem pressa, você tem seis chances.</p>
+        </section>
+
+        <section class="card legend-card" aria-labelledby="legend-title">
+          <h2 id="legend-title">Entenda as cores</h2>
+          <ul class="legend-list">
+            <li class="legend-item"><span class="swatch green" aria-hidden="true"></span> Letra certa, no lugar certo</li>
+            <li class="legend-item"><span class="swatch yellow" aria-hidden="true"></span> Está na palavra, em outro lugar</li>
+            <li class="legend-item"><span class="swatch gray" aria-hidden="true"></span> Não aparece na palavra</li>
+          </ul>
+        </section>
+      </aside>
+    </main>
+
+    <footer class="footer">Um minutinho de diversão para começar o dia. Volte amanhã para um novo desafio ✿</footer>
+  </div>
+</body>
+</html>

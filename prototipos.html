@@ -1,0 +1,166 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f5f3ef">
+    <meta name="description" content="Três propostas de interface para o jogo Palavra do Dia.">
+    <title>Três ideias para Palavra do Dia</title>
+    <style>
+      :root {
+        color-scheme: light;
+        font-family: "Segoe UI", Arial, sans-serif;
+        color: #252522;
+        background: #f5f3ef;
+        font-synthesis: none;
+      }
+
+      * { box-sizing: border-box; }
+
+      body {
+        min-width: 320px;
+        margin: 0;
+        padding: 34px clamp(16px, 3vw, 44px) 50px;
+      }
+
+      .page-header {
+        max-width: 760px;
+        margin: 0 auto 26px;
+        text-align: center;
+      }
+
+      .eyebrow {
+        margin: 0 0 8px;
+        color: #7562bb;
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: 1.5px;
+        text-transform: uppercase;
+      }
+
+      h1 {
+        margin: 0;
+        font-size: clamp(27px, 4vw, 42px);
+        letter-spacing: -1.5px;
+      }
+
+      .page-header > p:last-child {
+        margin: 8px 0 0;
+        color: #66645f;
+        font-size: 15px;
+        line-height: 1.5;
+      }
+
+      .prototypes {
+        display: grid;
+        max-width: 1720px;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 18px;
+        margin: auto;
+      }
+
+      .prototype-card {
+        min-width: 0;
+        overflow: hidden;
+        border: 1px solid #dedbd4;
+        border-radius: 18px;
+        background: white;
+        box-shadow: 0 8px 26px rgb(41 37 31 / 7%);
+      }
+
+      .card-heading {
+        min-height: 110px;
+        padding: 17px 18px 14px;
+      }
+
+      .card-heading h2 {
+        margin: 0 0 5px;
+        font-size: 18px;
+        letter-spacing: -0.3px;
+      }
+
+      .role {
+        display: inline-block;
+        margin-bottom: 7px;
+        color: #6451a3;
+        font-size: 10px;
+        font-weight: 800;
+        letter-spacing: .7px;
+        text-transform: uppercase;
+      }
+
+      .card-heading p {
+        margin: 0;
+        color: #62605b;
+        font-size: 12px;
+        line-height: 1.45;
+      }
+
+      iframe {
+        display: block;
+        width: 100%;
+        height: min(76vh, 790px);
+        min-height: 630px;
+        border: 0;
+        border-top: 1px solid #e8e5df;
+        background: #fff;
+      }
+
+      .page-footer {
+        margin: 22px 0 0;
+        color: #68655f;
+        font-size: 12px;
+        text-align: center;
+      }
+
+      @media (max-width: 1040px) {
+        .prototypes { grid-template-columns: 1fr; max-width: 640px; }
+        .card-heading { min-height: auto; }
+        iframe { height: 760px; }
+      }
+
+      @media (max-width: 500px) {
+        body { padding: 24px 12px 34px; }
+        iframe { height: 700px; min-height: 600px; }
+      }
+    </style>
+  </head>
+  <body>
+    <header class="page-header">
+      <p class="eyebrow">Painel de protótipos · Palavra do Dia</p>
+      <h1>Três jeitos de jogar</h1>
+      <p>Explore as três direções criadas pelo painel. Cada tela propõe uma interpretação visual diferente do mesmo desafio diário de cinco letras.</p>
+    </header>
+
+    <main class="prototypes" aria-label="Comparação de protótipos">
+      <article class="prototype-card">
+        <header class="card-heading">
+          <span class="role">Especialista em UX</span>
+          <h2>Jogo sem atrito</h2>
+          <p>Hierarquia direta e pistas para manter o jogador orientado.</p>
+        </header>
+        <iframe src="prototype-ux.html" title="Protótipo de UX: Jogo sem atrito"></iframe>
+      </article>
+
+      <article class="prototype-card">
+        <header class="card-heading">
+          <span class="role">Especialista em acessibilidade</span>
+          <h2>Leitura para todos</h2>
+          <p>Contraste, estados explícitos e alternativas à cor para comunicar cada pista.</p>
+        </header>
+        <iframe src="prototype-accessibility.html" title="Protótipo acessível: Leitura para todos"></iframe>
+      </article>
+
+      <article class="prototype-card">
+        <header class="card-heading">
+          <span class="role">Especialista em design visual</span>
+          <h2>Ateliê de palavras</h2>
+          <p>Uma identidade lúdica e expressiva para transformar o desafio em um pequeno ritual.</p>
+        </header>
+        <iframe src="prototype-visual.html" title="Protótipo visual: Ateliê de palavras"></iframe>
+      </article>
+    </main>
+
+    <p class="page-footer">Mockups estáticos para comparar direção — a mecânica do jogo permanece a mesma.</p>
+  </body>
+</html>
